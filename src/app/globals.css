@@ -162,3 +162,32 @@ html {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Touch swiping momentum and horizontal lock */
+html, body {
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
+}
+
+/* Soundwave Audio Indicator Animations */
+@keyframes soundwave-bounce {
+  0%, 100% {
+    height: 4px;
+  }
+  50% {
+    height: 16px;
+  }
+}
+
+.animate-soundwave-1 {
+  animation: soundwave-bounce 0.8s ease-in-out infinite;
+}
+.animate-soundwave-2 {
+  animation: soundwave-bounce 0.8s ease-in-out infinite 0.22s;
+}
+.animate-soundwave-3 {
+  animation: soundwave-bounce 0.8s ease-in-out infinite 0.12s;
+}
+.animate-soundwave-4 {
+  animation: soundwave-bounce 0.8s ease-in-out infinite 0.32s;
+}

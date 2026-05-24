@@ -328,6 +328,7 @@ function PageInner() {
     sectionRefs.current.forEach((el, index) => {
       if (!el) return;
 
+      const isMobile = typeof window !== "undefined" && window.innerWidth < 1024;
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
@@ -336,7 +337,7 @@ function PageInner() {
             }
           });
         },
-        { threshold: 0.55 }
+        { threshold: isMobile ? 0.25 : 0.55 }
       );
 
       observer.observe(el);
@@ -399,7 +400,7 @@ function PageInner() {
       <SectionIndicator />
 
       {/* ── Scroll-Snap Page Container ── */}
-      <main className="relative z-10 h-screen overflow-y-auto snap-y snap-mandatory scroll-smooth">
+      <main className="relative z-10 h-screen overflow-y-auto snap-none lg:snap-y lg:snap-mandatory scroll-smooth">
         {SECTIONS.map((section) => (
           <section
             key={section.id}
@@ -407,7 +408,7 @@ function PageInner() {
             ref={(el) => {
               sectionRefs.current[section.index] = el;
             }}
-            className="relative h-screen w-full snap-start snap-always flex items-center overflow-hidden"
+            className="relative h-screen w-full lg:snap-start lg:snap-always flex items-center overflow-hidden"
           >
             {section.index === 0 ? (
               <HeroContent />

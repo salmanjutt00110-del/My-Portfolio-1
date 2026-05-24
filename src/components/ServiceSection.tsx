@@ -103,20 +103,20 @@ export default function ServiceSection({
         
         {/* Left Column: Headline and Specs */}
         <div
-          className="col-span-1 lg:col-span-7 flex flex-col justify-between p-8 md:p-10 rounded-2xl bg-zinc-950/20 backdrop-blur-md border transition-all duration-500"
-          style={{ borderColor: hovered ? `${accentColor}25` : `${accentColor}10` }}
+          className="col-span-1 lg:col-span-7 flex flex-col justify-between p-5 md:p-10 rounded-2xl backdrop-blur-md bg-black/40 border border-white/10 transition-all duration-500"
+          style={{ borderColor: hovered ? `${accentColor}25` : undefined }}
         >
           <div className="flex flex-col h-full justify-between gap-8">
             <div>
               <span
-                className="text-[9px] tracking-[0.25em] font-semibold uppercase mb-3 block font-mono transition-colors duration-500"
+                className="text-[9px] tracking-[0.25em] font-semibold uppercase mb-3 block font-mono transition-colors duration-500 drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]"
                 style={{ color: accentColor }}
               >
                 Operational Objective
               </span>
               
               <h3
-                className="text-2xl md:text-3xl font-extrabold tracking-tight mb-4 leading-tight bg-gradient-to-r bg-clip-text text-transparent"
+                className="text-2xl md:text-3xl font-extrabold tracking-tight mb-4 leading-tight bg-gradient-to-r bg-clip-text text-transparent drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]"
                 style={{
                   fontFamily: "var(--font-heading)",
                   backgroundImage: `linear-gradient(135deg, ${gradientFrom} 0%, #FFFFFF 60%, ${gradientTo} 100%)`,
@@ -126,7 +126,7 @@ export default function ServiceSection({
               </h3>
               
               <p
-                className="text-sm md:text-base leading-relaxed text-zinc-400 font-medium"
+                className="text-sm md:text-base leading-relaxed text-zinc-300 font-medium drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]"
                 style={{ fontFamily: "var(--font-body)" }}
               >
                 {description}
@@ -135,7 +135,7 @@ export default function ServiceSection({
 
             {/* Operational Parameters / Specs */}
             <div className="border-t border-white/5 pt-6 mt-4">
-              <span className="text-[9px] tracking-widest text-zinc-500 uppercase mb-4 block font-mono">
+              <span className="text-[9px] tracking-widest text-zinc-500 uppercase mb-4 block font-mono drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
                 System Specifications
               </span>
               
@@ -143,7 +143,7 @@ export default function ServiceSection({
                 {specs.map((spec, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-2.5 py-1.5 px-3.5 rounded-full border bg-zinc-950/40 text-xs font-semibold text-zinc-300 transition-all duration-300 hover:text-white"
+                    className="flex items-center gap-2.5 py-1.5 px-3.5 rounded-full border bg-zinc-950/40 text-xs font-semibold text-zinc-300 transition-all duration-300 hover:text-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]"
                     style={{
                       borderColor: "rgba(255,255,255,0.05)",
                       fontFamily: "var(--font-body)",
@@ -165,9 +165,9 @@ export default function ServiceSection({
         <div
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
-          className="col-span-1 lg:col-span-5 flex flex-col justify-between p-8 rounded-2xl bg-zinc-950/45 backdrop-blur-xl border transition-all duration-500 relative overflow-hidden group"
+          className="col-span-1 lg:col-span-5 flex flex-col justify-between p-5 md:p-8 rounded-2xl backdrop-blur-md bg-black/40 border border-white/10 transition-all duration-500 relative overflow-hidden group"
           style={{
-            borderColor: hovered ? accentColor : "rgba(255, 255, 255, 0.05)",
+            borderColor: hovered ? accentColor : "rgba(255, 255, 255, 0.10)",
             boxShadow: hovered ? glowShadow : "none",
           }}
         >
@@ -188,13 +188,13 @@ export default function ServiceSection({
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: accentColor }} />
                   <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: accentColor }} />
                 </span>
-                <span className="text-[9px] font-mono text-zinc-500 tracking-wider">
+                <span className="text-[9px] font-mono text-zinc-500 tracking-wider drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
                   TELEMETRY LIVE
                 </span>
               </div>
               
               <span
-                className="text-[10px] font-mono font-bold transition-colors duration-500"
+                className="text-[10px] font-mono font-bold transition-colors duration-500 drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]"
                 style={{ color: accentColor }}
               >
                 {metrics}
@@ -204,7 +204,7 @@ export default function ServiceSection({
             {/* Metric Counter Big */}
             <div className="py-6 flex flex-col items-start">
               <h4
-                className="text-5xl md:text-6xl font-black tracking-tighter mb-2 bg-gradient-to-r bg-clip-text text-transparent"
+                className="text-5xl md:text-6xl font-black tracking-tighter mb-2 bg-gradient-to-r bg-clip-text text-transparent drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]"
                 style={{
                   fontFamily: "var(--font-heading)",
                   backgroundImage: `linear-gradient(135deg, ${gradientFrom} 0%, ${gradientTo} 100%)`,
@@ -212,7 +212,7 @@ export default function ServiceSection({
               >
                 {stats}
               </h4>
-              <span className="text-[10px] tracking-[0.2em] text-zinc-500 uppercase font-mono">
+              <span className="text-[10px] tracking-[0.2em] text-zinc-500 uppercase font-mono drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]">
                 {statsLabel}
               </span>
             </div>

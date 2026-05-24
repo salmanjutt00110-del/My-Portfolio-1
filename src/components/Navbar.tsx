@@ -57,6 +57,34 @@ const linkStagger = {
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState<boolean>(false);
   const { activeTheme, activeIndex, setActiveIndex } = useThemeEngine();
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+  const togglePlayback = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (isPlaying) {
+      audio.pause();
+      setIsPlaying(false);
+    } else {
+      audio.play().then(() => {
+        setIsPlaying(true);
+      }).catch(() => {
+        /* Safe play catch */
+      });
+    }
+  };
+
+  React.useEffect(() => {
+    const audio = new Audio("https://assets.mixkit.co/music/preview/mixkit-ambient-tone-2868.mp3");
+    audio.loop = true;
+    audio.volume = 0.15;
+    audioRef.current = audio;
+    
+    return () => {
+      audio.pause();
+    };
+  }, []);
 
   const handleNavClick = (link: NavLink) => {
     setActiveIndex(link.sectionIndex);
@@ -82,32 +110,65 @@ export default function Navbar() {
           borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
         }}
       >
-        {/* ── Logo ── */}
-        <a
-          href="#home"
-          onClick={(e) => {
-            e.preventDefault();
-            setActiveIndex(0);
-            const el = document.getElementById("home");
-            if (el) el.scrollIntoView({ behavior: "smooth" });
-          }}
-          className="relative group"
-        >
-          <span
-            className="text-[22px] font-black tracking-[0.3em] uppercase"
-            style={{ color: "#FAFAFA", fontFamily: "var(--font-heading)" }}
+        <div className="flex items-center gap-4 md:gap-6">
+          {/* ── Logo ── */}
+          <a
+            href="#home"
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveIndex(0);
+              const el = document.getElementById("home");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="relative group"
           >
-            SHANI
-          </span>
-          {/* Subtle accent underline on hover */}
-          <motion.span
-            className="absolute -bottom-1 left-0 h-[2px] rounded-full"
-            initial={{ width: 0 }}
-            whileHover={{ width: "100%" }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            style={{ backgroundColor: activeTheme.accentColor }}
-          />
-        </a>
+            <span
+              className="text-[22px] font-black tracking-[0.3em] uppercase"
+              style={{ color: "#FAFAFA", fontFamily: "var(--font-heading)" }}
+            >
+              SHANI
+            </span>
+            {/* Subtle accent underline on hover */}
+            <motion.span
+              className="absolute -bottom-1 left-0 h-[2px] rounded-full"
+              initial={{ width: 0 }}
+              whileHover={{ width: "100%" }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              style={{ backgroundColor: activeTheme.accentColor }}
+            />
+          </a>
+
+          {/* Minimalist Ambient Audio Toggle */}
+          <button
+            onClick={togglePlayback}
+            className="flex items-center gap-2.5 px-3 py-1.5 rounded-full border bg-white/5 transition-all duration-300 hover:bg-white/10 cursor-pointer"
+            style={{ borderColor: isPlaying ? activeTheme.accentColor : "rgba(255,255,255,0.1)" }}
+          >
+            <div className="flex items-center gap-[3px] h-4 w-6 justify-center">
+              {isPlaying ? (
+                <>
+                  <span className="w-[2px] h-[6px] rounded-full animate-soundwave-1" style={{ backgroundColor: activeTheme.accentColor }} />
+                  <span className="w-[2px] h-[10px] rounded-full animate-soundwave-2" style={{ backgroundColor: activeTheme.accentColor }} />
+                  <span className="w-[2px] h-[8px] rounded-full animate-soundwave-3" style={{ backgroundColor: activeTheme.accentColor }} />
+                  <span className="w-[2px] h-[5px] rounded-full animate-soundwave-4" style={{ backgroundColor: activeTheme.accentColor }} />
+                </>
+              ) : (
+                <>
+                  <span className="w-[2px] h-[3px] bg-zinc-600 rounded-full" />
+                  <span className="w-[2px] h-[3px] bg-zinc-600 rounded-full" />
+                  <span className="w-[2px] h-[3px] bg-zinc-600 rounded-full" />
+                  <span className="w-[2px] h-[3px] bg-zinc-600 rounded-full" />
+                </>
+              )}
+            </div>
+            <span
+              className="text-[9px] font-mono tracking-widest font-bold hidden sm:inline-block transition-colors duration-300"
+              style={{ color: isPlaying ? activeTheme.accentColor : "rgba(250, 250, 250, 0.45)" }}
+            >
+              {isPlaying ? "AMBIENT: ON" : "AMBIENT: MUTED"}
+            </span>
+          </button>
+        </div>
 
         {/* ── Desktop Navigation Links ── */}
         <nav className="hidden md:flex items-center gap-8">
@@ -284,14 +345,14 @@ export default function Navbar() {
                   contact@amirads.pro
                 </a>
                 <a
-                  href="tel:+923071952648"
+                  href="tel:+923100128702"
                   className="block text-sm transition-colors duration-300"
                   style={{
                     color: "rgba(250, 250, 250, 0.5)",
                     fontFamily: "var(--font-body)",
                   }}
                 >
-                  +92 307 1952648
+                  +92 310 0128702
                 </a>
               </motion.div>
             </motion.nav>

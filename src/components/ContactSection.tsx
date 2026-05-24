@@ -17,7 +17,7 @@ export default function ContactSection() {
   };
 
   /* WhatsApp Link with Pre-filled Client Message */
-  const whatsappUrl = "https://wa.me/923071952648?text=Hello%20Salman,%20I%20would%20like%20to%20discuss%20a%20premium%20creative%20project%20with%20you.";
+  const whatsappUrl = "https://wa.me/923100128702?text=Hello%20Salman,%20I%20would%20like%20to%20discuss%20a%20premium%20creative%20project%20with%20you.";
 
   return (
     <div className="relative w-full h-full flex flex-col justify-center py-20 lg:py-0 px-6 md:px-16 lg:px-24">
@@ -180,7 +180,7 @@ export default function ContactSection() {
                   fontFamily: "var(--font-body)",
                 }}
               >
-                +92 307 1952648
+                +92 310 0128702
               </span>
             </div>
           </div>

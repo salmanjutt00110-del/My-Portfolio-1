@@ -50,7 +50,7 @@ function SingleVideo({ video, isActive }: SingleVideoProps) {
 
   return (
     <motion.div
-      className="absolute inset-0 w-full h-full"
+      className="absolute inset-0 w-full h-full transform-gpu backface-visibility-hidden translate-z-0 will-change-[opacity,transform]"
       initial={{ opacity: 0 }}
       animate={{ opacity: isActive ? 1 : 0 }}
       transition={{ duration: 1.0, ease: "easeInOut" }}
@@ -59,12 +59,21 @@ function SingleVideo({ video, isActive }: SingleVideoProps) {
       <video
         ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover"
-        muted
-        loop
-        playsInline
-        autoPlay
+        muted={true}
+        loop={true}
+        playsInline={true}
+        autoPlay={true}
+        controls={false}
         preload="auto"
-        style={{ pointerEvents: "none" }}
+        style={{
+          pointerEvents: "none",
+          filter: "brightness(0.75) contrast(1.20) saturate(1.15)",
+          transform: "translate3d(0, 0, 0)",
+          WebkitTransform: "translate3d(0, 0, 0)",
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+          willChange: "opacity, transform"
+        }}
       >
         <source src={video.src} type="video/mp4" />
       </video>
