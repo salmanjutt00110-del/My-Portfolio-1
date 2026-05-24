@@ -16,10 +16,10 @@ interface NavLink {
 
 const NAV_LINKS: NavLink[] = [
   { label: "Home", href: "#home", sectionIndex: 0 },
-  { label: "Services", href: "#services", sectionIndex: 1 },
-  { label: "Work", href: "#work", sectionIndex: 2 },
-  { label: "About", href: "#about", sectionIndex: 3 },
-  { label: "Contact", href: "#contact", sectionIndex: 4 },
+  { label: "Services", href: "#graphic-design", sectionIndex: 1 },
+  { label: "Work", href: "#work", sectionIndex: 5 },
+  { label: "About", href: "#about", sectionIndex: 6 },
+  { label: "Contact", href: "#contact", sectionIndex: 7 },
 ];
 
 /* ─────────────────────────────────────────────
@@ -85,11 +85,16 @@ export default function Navbar() {
         {/* ── Logo ── */}
         <a
           href="#home"
-          onClick={() => setActiveIndex(0)}
+          onClick={(e) => {
+            e.preventDefault();
+            setActiveIndex(0);
+            const el = document.getElementById("home");
+            if (el) el.scrollIntoView({ behavior: "smooth" });
+          }}
           className="relative group"
         >
           <span
-            className="text-[22px] font-bold tracking-[0.3em] uppercase"
+            className="text-[22px] font-black tracking-[0.3em] uppercase"
             style={{ color: "#FAFAFA", fontFamily: "var(--font-heading)" }}
           >
             SHANI
@@ -107,7 +112,14 @@ export default function Navbar() {
         {/* ── Desktop Navigation Links ── */}
         <nav className="hidden md:flex items-center gap-8">
           {NAV_LINKS.map((link) => {
-            const isActive = activeIndex === link.sectionIndex;
+            // Highlight active navigation links properly based on custom mapping
+            const isActive = link.label === "Services"
+              ? (activeIndex >= 1 && activeIndex <= 4)
+              : (link.label === "Home" ? activeIndex === 0
+                 : link.label === "Work" ? activeIndex === 5
+                 : link.label === "About" ? activeIndex === 6
+                 : activeIndex === 7);
+
             return (
               <button
                 key={link.label}
@@ -119,7 +131,7 @@ export default function Navbar() {
                     : "rgba(250, 250, 250, 0.6)",
                   fontFamily: "var(--font-body)",
                   fontSize: "13px",
-                  fontWeight: 500,
+                  fontWeight: 600,
                   letterSpacing: "0.08em",
                   textTransform: "uppercase",
                   background: "none",
@@ -183,7 +195,7 @@ export default function Navbar() {
           <>
             {/* Backdrop overlay */}
             <motion.div
-              className="fixed inset-0 md:hidden"
+              className="fixed inset-0 md:hidden animate-fade-in"
               style={{ zIndex: 40, backgroundColor: "rgba(0, 0, 0, 0.6)" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -209,7 +221,13 @@ export default function Navbar() {
             >
               <div className="flex flex-col gap-6">
                 {NAV_LINKS.map((link, i) => {
-                  const isActive = activeIndex === link.sectionIndex;
+                  const isActive = link.label === "Services"
+                    ? (activeIndex >= 1 && activeIndex <= 4)
+                    : (link.label === "Home" ? activeIndex === 0
+                       : link.label === "Work" ? activeIndex === 5
+                       : link.label === "About" ? activeIndex === 6
+                       : activeIndex === 7);
+
                   return (
                     <motion.button
                       key={link.label}

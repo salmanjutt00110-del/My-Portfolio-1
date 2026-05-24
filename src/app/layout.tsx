@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Syne, Outfit, Montserrat } from "next/font/google";
+import { Syne, Outfit, Montserrat, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 
 /* ─────────────────────────────────────────────
@@ -25,6 +25,13 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
   display: "swap",
   weight: ["400", "500", "600", "700"],
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 /* ─────────────────────────────────────────────
@@ -66,7 +73,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${syne.variable} ${outfit.variable} ${montserrat.variable} h-full antialiased`}
+      className={`${syne.variable} ${outfit.variable} ${montserrat.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#09090B] text-[#FAFAFA]">
         {children}

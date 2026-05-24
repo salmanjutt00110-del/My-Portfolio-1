@@ -6,10 +6,10 @@ import { ThemeContextProvider, useThemeEngine } from "@/context/ThemeContext";
 import BackgroundVideo from "@/components/BackgroundVideo";
 import CustomCursor from "@/components/CustomCursor";
 import Navbar from "@/components/Navbar";
-import GraphicDesignSection from "@/components/GraphicDesignSection";
-import VideoProductionSection from "@/components/VideoProductionSection";
+import ServiceSection from "@/components/ServiceSection";
 import WebDevSection from "@/components/WebDevSection";
-import AboutContactSection from "@/components/AboutContactSection";
+import AboutSection from "@/components/AboutSection";
+import ContactSection from "@/components/ContactSection";
 
 /* ─────────────────────────────────────────────
    Section Metadata Definition
@@ -30,26 +30,44 @@ const SECTIONS: SectionData[] = [
     subtitle: "Muhammad Salman (Shani) | Creative Digital Specialist",
   },
   {
-    id: "services",
+    id: "graphic-design",
     index: 1,
-    label: "Total Services",
-    subtitle: "Business Graphic Designing, Video Production, Web Dev, and Meta Ads Management.",
+    label: "Graphic Design",
+    subtitle: "Swiss Luxury Layouts, 3D Brand Assets, High-Contrast Typography.",
   },
   {
-    id: "about",
+    id: "video-production",
     index: 2,
-    label: "About Me",
-    subtitle: "Official professional biography and design frameworks.",
+    label: "Video Production",
+    subtitle: "60.00 FPS Telemetry, Emerald Rec.709 Space, cinematic grading.",
+  },
+  {
+    id: "web-dev-service",
+    index: 3,
+    label: "Web Development",
+    subtitle: "Robust high-performance Next.js systems & type-safe architectures.",
+  },
+  {
+    id: "meta-ads",
+    index: 4,
+    label: "Meta Ads & FB Management",
+    subtitle: "Data-driven marketing funnels, USA/UK targeting setups, and ROAS optimization.",
   },
   {
     id: "work",
-    index: 3,
+    index: 5,
     label: "My Work",
     subtitle: "Interactive case studies and operational repository architectures.",
   },
   {
+    id: "about",
+    index: 6,
+    label: "About Me",
+    subtitle: "Official professional biography and design frameworks.",
+  },
+  {
     id: "contact",
-    index: 4,
+    index: 7,
     label: "Contact & Assistant",
     subtitle: "Direct conversion grids, client connection, and direct communication hubs.",
   },
@@ -119,8 +137,39 @@ function SectionIndicator() {
 function HeroContent() {
   const { activeTheme } = useThemeEngine();
 
+  // Name animation letters mapping
+  const nameText = "MUHAMMAD SALMAN";
+  const nameLetters = Array.from(nameText);
+
+  // Floating particles helper
+  const particles = Array.from({ length: 15 });
+
   return (
-    <div className="relative z-10 flex flex-col items-start justify-center h-full px-8 md:px-20 lg:px-32 w-full max-w-5xl text-left select-none">
+    <div className="relative z-10 flex flex-col items-start justify-center h-full px-8 md:px-20 lg:px-32 w-full max-w-5xl text-left select-none overflow-hidden">
+      {/* Floating particles background */}
+      {particles.map((_, idx) => (
+        <motion.div
+          key={idx}
+          className="absolute rounded-full pointer-events-none opacity-20"
+          style={{
+            width: Math.random() * 6 + 2,
+            height: Math.random() * 6 + 2,
+            backgroundColor: activeTheme.accentColor,
+            top: `${Math.random() * 80 + 10}%`,
+            left: `${Math.random() * 80 + 10}%`,
+          }}
+          animate={{
+            y: [0, Math.random() * -50 - 20, 0],
+            opacity: [0.15, 0.4, 0.15],
+          }}
+          transition={{
+            duration: Math.random() * 6 + 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+
       {/* Overline brand tag */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
@@ -140,38 +189,61 @@ function HeroContent() {
         </span>
       </motion.div>
 
-      {/* Main Headline */}
-      <motion.h1
-        initial={{ opacity: 0, y: 35 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
-        viewport={{ once: true }}
-        className="text-[clamp(2.0rem,6.5vw,5.0rem)] font-black leading-[0.95] tracking-tight mb-4 text-white"
-        style={{ fontFamily: "var(--font-heading)" }}
-      >
-        MUHAMMAD SALMAN
-        <br />
-        <span style={{ color: activeTheme.accentColor }} className="transition-colors duration-500">
-          (SHANI)
-        </span>
-      </motion.h1>
+      {/* Main Headline with letter stagger */}
+      <div className="mb-4">
+        <h1
+          className="text-[clamp(2.2rem,6.5vw,5.5rem)] font-black leading-[0.92] tracking-tight text-white mb-2"
+          style={{ fontFamily: "var(--font-heading)" }}
+        >
+          {nameLetters.map((char, index) => (
+            <motion.span
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: index * 0.05 + 0.2,
+                duration: 0.6,
+                ease: "easeOut",
+              }}
+              style={{ display: "inline-block", marginRight: char === " " ? "0.4em" : "0" }}
+            >
+              {char}
+            </motion.span>
+          ))}
+        </h1>
 
-      {/* Subtitle */}
-      <motion.h2
-        initial={{ opacity: 0, y: 15 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.35 }}
-        viewport={{ once: true }}
-        className="text-xs md:text-sm tracking-[0.3em] font-extrabold uppercase font-mono mb-4 text-zinc-400"
+        <motion.h1
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: nameLetters.length * 0.05 + 0.3, duration: 0.6 }}
+          className="text-[clamp(1.8rem,5.5vw,4.5rem)] font-black leading-[0.95] tracking-tight bg-gradient-to-r bg-clip-text text-transparent"
+          style={{
+            fontFamily: "var(--font-heading)",
+            backgroundImage: `linear-gradient(135deg, ${activeTheme.gradientFrom} 0%, #FFFFFF 50%, ${activeTheme.gradientTo} 100%)`,
+            textShadow: activeTheme.glowShadow,
+          }}
+        >
+          (SHANI)
+        </motion.h1>
+      </div>
+
+      {/* Typewriter-style Subtitle */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 0.5 }}
+        className="mb-5"
       >
-        CREATIVE DIGITAL SPECIALIST
-      </motion.h2>
+        <h2 className="text-xs md:text-sm tracking-[0.3em] font-extrabold uppercase font-mono text-zinc-400 overflow-hidden whitespace-nowrap border-r-2 border-white/80 animate-pulse">
+          Creative Digital Specialist
+        </h2>
+      </motion.div>
 
       {/* Tagline */}
       <motion.p
         initial={{ opacity: 0, y: 15 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.45 }}
+        transition={{ duration: 0.6, delay: 1.4 }}
         viewport={{ once: true }}
         className="max-w-md text-sm md:text-base leading-relaxed text-zinc-500 mb-8 font-medium"
         style={{ fontFamily: "var(--font-body)" }}
@@ -183,12 +255,12 @@ function HeroContent() {
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.55 }}
+        transition={{ duration: 0.6, delay: 1.6 }}
         viewport={{ once: true }}
         className="flex items-center gap-4"
       >
         <a
-          href="#services"
+          href="#graphic-design"
           className="inline-flex items-center gap-2 px-7 py-3 text-xs font-bold tracking-widest uppercase rounded-full transition-all duration-300 hover:scale-105"
           style={{
             backgroundColor: activeTheme.accentColor,
@@ -213,28 +285,27 @@ function HeroContent() {
         </a>
       </motion.div>
 
-      {/* Minimalist "Scroll Down to Explore" mouse animation */}
+      {/* Minimalist Metrics Stats Bar */}
       <motion.div
-        className="absolute bottom-10 left-8 md:left-20 lg:left-32 flex items-center gap-3"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.0, duration: 0.8 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.8, duration: 0.7 }}
+        className="flex flex-wrap items-center gap-6 md:gap-12 mt-12 border-t border-white/5 pt-8 text-[10px] font-mono tracking-widest text-zinc-500 w-full"
       >
-        <div
-          className="w-5 h-8 rounded-full border-2 border-white/10 flex justify-center py-1.5"
-          style={{ width: "22px", height: "36px" }}
-        >
-          <motion.div
-            className="w-1 h-2 rounded-full bg-white"
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          />
+        <div>
+          <span className="text-white font-bold block text-xs md:text-sm font-heading">4+ YEARS</span>
+          EXPERIENCE
         </div>
-        <span
-          className="text-[9px] tracking-[0.25em] text-zinc-500 uppercase font-mono"
-        >
-          Scroll Down to Explore
-        </span>
+        <div className="w-[1px] h-6 bg-white/5 hidden md:block" />
+        <div>
+          <span className="text-white font-bold block text-xs md:text-sm font-heading">50+ PROJECTS</span>
+          COMPLETED
+        </div>
+        <div className="w-[1px] h-6 bg-white/5 hidden md:block" />
+        <div>
+          <span className="text-white font-bold block text-xs md:text-sm font-heading">100%</span>
+          CLIENT SATISFACTION
+        </div>
       </motion.div>
     </div>
   );
@@ -341,13 +412,75 @@ function PageInner() {
             {section.index === 0 ? (
               <HeroContent />
             ) : section.index === 1 ? (
-              <GraphicDesignSection />
+              <ServiceSection
+                index={1}
+                label="Graphic Design & Branding"
+                headline="Visual Identities That Command Attention"
+                description="High-end corporate branding, luxury watch boutique layouts, and modern vectors designed for global target conversions."
+                specs={["Swiss Luxury Layouts", "3D Brand Assets", "High-Contrast Typography"]}
+                metrics="Design Systems: 100% Custom"
+                stats="50+ Brands"
+                statsLabel="Visual Identities Created"
+                accentColor="#00FF66"
+                gradientFrom="#00FF66"
+                gradientTo="#00FFCC"
+                glowColor="rgba(0, 255, 102, 0.2)"
+                glowShadow="0 0 60px 15px rgba(0, 255, 102, 0.12)"
+              />
             ) : section.index === 2 ? (
-              <VideoProductionSection />
+              <ServiceSection
+                index={2}
+                label="Video Production & Editing"
+                headline="Cinematic Storytelling Sequence"
+                description="Tactical post-production suite including cinematic grading, Ray-Traced 3D logo overlays, and immersive soundscapes."
+                specs={["60.00 FPS Telemetry", "Emerald Rec.709 Space", "4D Octane Engine Lighting"]}
+                metrics="Render Engine: Octane 4D"
+                stats="100+ Commercials"
+                statsLabel="Edited & Delivered"
+                accentColor="#E4E4E7"
+                gradientFrom="#E4E4E7"
+                gradientTo="#A1A1AA"
+                glowColor="rgba(228, 228, 231, 0.15)"
+                glowShadow="0 0 60px 15px rgba(228, 228, 231, 0.08)"
+              />
             ) : section.index === 3 ? (
+              <ServiceSection
+                index={3}
+                label="Web Development"
+                headline="Robust High-Performance Systems"
+                description="Pixel-perfect Next.js frameworks and strict type-safe TypeScript architectures engineered for maximum speed."
+                specs={["Next.js & Server Components", "Tailwind CSS Layouts", "GSAP Scroll Timelines"]}
+                metrics="Deployment Speed: 100/100 LCP"
+                stats="30+ Apps"
+                statsLabel="High-Performance Workspaces"
+                accentColor="#00F0FF"
+                gradientFrom="#00F0FF"
+                gradientTo="#0070F3"
+                glowColor="rgba(0, 240, 255, 0.2)"
+                glowShadow="0 0 60px 15px rgba(0, 240, 255, 0.12)"
+              />
+            ) : section.index === 4 ? (
+              <ServiceSection
+                index={4}
+                label="Meta Ads & FB Management"
+                headline="Data-Driven Marketing Funnels"
+                description="Advanced ROAS optimization matrices, international ad scale strategies, and high-intent targeting setups."
+                specs={["4-5 Years Meta Scale", "USA/UK Demographics", "ROAS Optimization"]}
+                metrics="Performance Yield: +380% ROAS"
+                stats="$150k+ Spend"
+                statsLabel="Managed Ad Budgets"
+                accentColor="#F59E0B"
+                gradientFrom="#F59E0B"
+                gradientTo="#EF4444"
+                glowColor="rgba(245, 158, 11, 0.2)"
+                glowShadow="0 0 60px 15px rgba(245, 158, 11, 0.12)"
+              />
+            ) : section.index === 5 ? (
               <WebDevSection />
+            ) : section.index === 6 ? (
+              <AboutSection />
             ) : (
-              <AboutContactSection />
+              <ContactSection />
             )}
           </section>
         ))}

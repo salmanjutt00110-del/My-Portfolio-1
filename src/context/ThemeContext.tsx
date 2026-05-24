@@ -25,6 +25,10 @@ export interface SectionTheme {
   bgColor: string;
   /** Array of video source paths (first = primary, rest = fallbacks) */
   videoPaths: string[];
+  /** Custom gradient start color */
+  gradientFrom: string;
+  /** Custom gradient end color */
+  gradientTo: string;
 }
 
 export interface ThemeEngineState {
@@ -32,44 +36,62 @@ export interface ThemeEngineState {
   activeTheme: SectionTheme;
   sections: SectionTheme[];
   setActiveIndex: (index: number) => void;
-  /* Sub-index for dynamic services within Section 1 */
-  activeServiceIndex: number;
-  setActiveServiceIndex: (index: number) => void;
 }
 
 /* ─────────────────────────────────────────────
-   Theme Map – 5 Main Sequential Sections
+   Theme Map – 8 Sequential Sections
    ───────────────────────────────────────────── */
 
 const SECTION_THEMES: SectionTheme[] = [
   {
     title: "Home",
-    accentColor: "#FAFAFA",
-    glowColor: "rgba(250, 250, 250, 0.15)",
-    glowShadow: "0 0 60px 15px rgba(250, 250, 250, 0.08)",
+    accentColor: "#00FF66",
+    glowColor: "rgba(0, 255, 102, 0.15)",
+    glowShadow: "0 0 60px 15px rgba(0, 255, 102, 0.08)",
     bgColor: "#09090B",
-    videoPaths: [], // Void canvas - no video background
+    videoPaths: ["/videos/profile.mp4"],
+    gradientFrom: "#00FF66",
+    gradientTo: "#00F0FF",
   },
   {
-    title: "Total Services Showcase",
-    accentColor: "#00FF66", // Defaults to Graphic Design emerald green
+    title: "Graphic Design & Branding",
+    accentColor: "#00FF66",
     glowColor: "rgba(0, 255, 102, 0.2)",
     glowShadow: "0 0 60px 15px rgba(0, 255, 102, 0.12)",
     bgColor: "#042F1A",
-    videoPaths: [
-      "/videos/grapic.mp4",
-      "/videos/video editing.mp4",
-      "/videos/web.mp4",
-      "/videos/fb.mp4",
-    ],
+    videoPaths: ["/videos/grapic.mp4"],
+    gradientFrom: "#00FF66",
+    gradientTo: "#00FFCC",
   },
   {
-    title: "About Me",
+    title: "Video Production & Editing",
     accentColor: "#E4E4E7",
     glowColor: "rgba(228, 228, 231, 0.15)",
     glowShadow: "0 0 60px 15px rgba(228, 228, 231, 0.08)",
     bgColor: "#18181B",
-    videoPaths: ["/videos/profile.mp4"],
+    videoPaths: ["/videos/video-editing.mp4"],
+    gradientFrom: "#E4E4E7",
+    gradientTo: "#A1A1AA",
+  },
+  {
+    title: "Web Development",
+    accentColor: "#00F0FF",
+    glowColor: "rgba(0, 240, 255, 0.2)",
+    glowShadow: "0 0 60px 15px rgba(0, 240, 255, 0.12)",
+    bgColor: "#0C0C0E",
+    videoPaths: ["/videos/web.mp4"],
+    gradientFrom: "#00F0FF",
+    gradientTo: "#0070F3",
+  },
+  {
+    title: "Meta Ads & FB Management",
+    accentColor: "#F59E0B",
+    glowColor: "rgba(245, 158, 11, 0.2)",
+    glowShadow: "0 0 60px 15px rgba(245, 158, 11, 0.12)",
+    bgColor: "#0F0F11",
+    videoPaths: ["/videos/fb.mp4"],
+    gradientFrom: "#F59E0B",
+    gradientTo: "#EF4444",
   },
   {
     title: "My Work",
@@ -78,6 +100,18 @@ const SECTION_THEMES: SectionTheme[] = [
     glowShadow: "0 0 60px 15px rgba(0, 240, 255, 0.12)",
     bgColor: "#0C0C0E",
     videoPaths: ["/videos/web.mp4"],
+    gradientFrom: "#00F0FF",
+    gradientTo: "#0070F3",
+  },
+  {
+    title: "About Me",
+    accentColor: "#E4E4E7",
+    glowColor: "rgba(228, 228, 231, 0.15)",
+    glowShadow: "0 0 60px 15px rgba(228, 228, 231, 0.08)",
+    bgColor: "#18181B",
+    videoPaths: ["/videos/profile.mp4"],
+    gradientFrom: "#E4E4E7",
+    gradientTo: "#A1A1AA",
   },
   {
     title: "Contact & Assistant",
@@ -85,11 +119,9 @@ const SECTION_THEMES: SectionTheme[] = [
     glowColor: "rgba(245, 158, 11, 0.2)",
     glowShadow: "0 0 60px 15px rgba(245, 158, 11, 0.12)",
     bgColor: "#0F0F11",
-    videoPaths: [
-      "/videos/fb.mp4",
-      "/videos/meta ads.mp4",
-      "/videos/page man.mp4",
-    ],
+    videoPaths: ["/videos/fb.mp4"],
+    gradientFrom: "#F59E0B",
+    gradientTo: "#EF4444",
   },
 ];
 
@@ -105,44 +137,10 @@ interface ThemeProviderProps {
 
 export function ThemeContextProvider({ children }: ThemeProviderProps) {
   const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [activeServiceIndex, setActiveServiceIndex] = useState<number>(0);
 
-  /* Dynamically override Section 1 settings based on activeServiceIndex */
   const currentTheme = useMemo<SectionTheme>(() => {
-    const base = SECTION_THEMES[activeIndex];
-    if (activeIndex === 1) {
-      if (activeServiceIndex === 0) {
-        return {
-          ...base,
-          accentColor: "#00FF66",
-          glowColor: "rgba(0, 255, 102, 0.2)",
-          glowShadow: "0 0 60px 15px rgba(0, 255, 102, 0.12)",
-        };
-      } else if (activeServiceIndex === 1) {
-        return {
-          ...base,
-          accentColor: "#E4E4E7",
-          glowColor: "rgba(228, 228, 231, 0.15)",
-          glowShadow: "0 0 60px 15px rgba(228, 228, 231, 0.08)",
-        };
-      } else if (activeServiceIndex === 2) {
-        return {
-          ...base,
-          accentColor: "#00F0FF",
-          glowColor: "rgba(0, 240, 255, 0.2)",
-          glowShadow: "0 0 60px 15px rgba(0, 240, 255, 0.12)",
-        };
-      } else {
-        return {
-          ...base,
-          accentColor: "#F59E0B",
-          glowColor: "rgba(245, 158, 11, 0.2)",
-          glowShadow: "0 0 60px 15px rgba(245, 158, 11, 0.12)",
-        };
-      }
-    }
-    return base;
-  }, [activeIndex, activeServiceIndex]);
+    return SECTION_THEMES[activeIndex] || SECTION_THEMES[0];
+  }, [activeIndex]);
 
   const value = useMemo<ThemeEngineState>(
     () => ({
@@ -154,14 +152,8 @@ export function ThemeContextProvider({ children }: ThemeProviderProps) {
           setActiveIndex(index);
         }
       },
-      activeServiceIndex,
-      setActiveServiceIndex: (index: number) => {
-        if (index >= 0 && index < 4) {
-          setActiveServiceIndex(index);
-        }
-      },
     }),
-    [activeIndex, currentTheme, activeServiceIndex]
+    [activeIndex, currentTheme]
   );
 
   return (

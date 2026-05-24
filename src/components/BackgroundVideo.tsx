@@ -16,7 +16,7 @@ interface VideoSource {
 const ALL_VIDEOS: VideoSource[] = [
   { id: "profile", src: "/videos/profile.mp4" },
   { id: "grapic", src: "/videos/grapic.mp4" },
-  { id: "videoEditing", src: "/videos/video editing.mp4" },
+  { id: "videoEditing", src: "/videos/video-editing.mp4" },
   { id: "web", src: "/videos/web.mp4" },
   { id: "fb", src: "/videos/fb.mp4" },
 ];
@@ -28,30 +28,33 @@ const ALL_VIDEOS: VideoSource[] = [
 interface SingleVideoProps {
   video: VideoSource;
   isActive: boolean;
-  isVisibleGlobal: boolean;
 }
 
-function SingleVideo({ video, isActive, isVisibleGlobal }: SingleVideoProps) {
+function SingleVideo({ video, isActive }: SingleVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const videoEl = videoRef.current;
     if (!videoEl) return;
 
-    if (isActive && isVisibleGlobal) {
+    if (isActive) {
+      // Ensure the video plays and loops smoothly
       videoEl.play().catch(() => {
         /* Autoplay block fallback */
       });
+    } else {
+      // Pause inactive videos to save CPU/GPU resource
+      videoEl.pause();
     }
-  }, [isActive, isVisibleGlobal]);
+  }, [isActive]);
 
   return (
     <motion.div
       className="absolute inset-0 w-full h-full"
       initial={{ opacity: 0 }}
-      animate={{ opacity: isActive && isVisibleGlobal ? 1 : 0 }}
-      transition={{ duration: 0.8, ease: "easeInOut" }}
-      style={{ zIndex: isActive && isVisibleGlobal ? 1 : 0 }}
+      animate={{ opacity: isActive ? 1 : 0 }}
+      transition={{ duration: 1.0, ease: "easeInOut" }}
+      style={{ zIndex: isActive ? 1 : 0 }}
     >
       <video
         ref={videoRef}
@@ -74,29 +77,31 @@ function SingleVideo({ video, isActive, isVisibleGlobal }: SingleVideoProps) {
    ───────────────────────────────────────────── */
 
 export default function BackgroundVideo() {
-  const { activeIndex, activeServiceIndex } = useThemeEngine();
+  const { activeIndex } = useThemeEngine();
 
-  /* Home Section 0 must leave a pure elegant black void canvas */
-  const isVisibleGlobal = activeIndex > 0;
-
-  /* Determine which video id should be active */
+  /* Map each section index directly to its video */
   const activeVideoId = React.useMemo(() => {
-    if (!isVisibleGlobal) return "";
-
-    if (activeIndex === 1) {
-      // Services Sub-Videos
-      if (activeServiceIndex === 0) return "grapic";
-      if (activeServiceIndex === 1) return "videoEditing";
-      if (activeServiceIndex === 2) return "web";
-      return "fb";
+    switch (activeIndex) {
+      case 0:
+        return "profile"; // HOME (Hero)
+      case 1:
+        return "grapic"; // Graphic Design & Branding
+      case 2:
+        return "videoEditing"; // Video Production & Editing
+      case 3:
+        return "web"; // Web Development
+      case 4:
+        return "fb"; // Meta Ads & FB Management
+      case 5:
+        return "web"; // My Work
+      case 6:
+        return "profile"; // About Me
+      case 7:
+        return "fb"; // Contact & Assistant
+      default:
+        return "profile";
     }
-
-    if (activeIndex === 2) return "profile"; // About Me
-    if (activeIndex === 3) return "web";     // My Work
-    if (activeIndex === 4) return "fb";      // Contact
-
-    return "";
-  }, [activeIndex, activeServiceIndex, isVisibleGlobal]);
+  }, [activeIndex]);
 
   return (
     <div
@@ -110,9 +115,17 @@ export default function BackgroundVideo() {
           key={video.id}
           video={video}
           isActive={activeVideoId === video.id}
-          isVisibleGlobal={isVisibleGlobal}
         />
       ))}
+
+      {/* ── Dark Overlay for Hero and content readability ── */}
+      <div
+        className="absolute inset-0 pointer-events-none transition-all duration-700"
+        style={{
+          zIndex: 5,
+          backgroundColor: activeIndex === 0 ? "rgba(9, 9, 11, 0.75)" : "rgba(9, 9, 11, 0.65)",
+        }}
+      />
 
       {/* ── Premium Dot Matrix Grid Overlay ── */}
       <div
@@ -131,7 +144,7 @@ export default function BackgroundVideo() {
         style={{
           zIndex: 7,
           background:
-            "radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(0,0,0,0.5) 75%, rgba(0,0,0,0.9) 100%)",
+            "radial-gradient(ellipse at center, transparent 0%, transparent 40%, rgba(0,0,0,0.55) 75%, rgba(0,0,0,0.92) 100%)",
         }}
       />
 

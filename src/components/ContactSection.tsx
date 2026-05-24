@@ -4,11 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useThemeEngine } from "@/context/ThemeContext";
 
-/* ─────────────────────────────────────────────
-   Section 4: Contact & Assistant Component
-   ───────────────────────────────────────────── */
-
-export default function AboutContactSection() {
+export default function ContactSection() {
   const { activeTheme } = useThemeEngine();
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
@@ -26,7 +22,7 @@ export default function AboutContactSection() {
   return (
     <div className="relative w-full h-full flex flex-col justify-center py-20 lg:py-0 px-6 md:px-16 lg:px-24">
       {/* Outer Aesthetic Border */}
-      <div 
+      <div
         className="absolute inset-0 pointer-events-none rounded-[32px] border m-4 lg:m-8 transition-colors duration-500"
         style={{
           borderColor: `${activeTheme.accentColor}15`,
@@ -44,13 +40,13 @@ export default function AboutContactSection() {
       {/* ── Heading Header ── */}
       <div className="mb-10 text-left max-w-xl z-20">
         <span
-          className="text-[10px] tracking-[0.4em] uppercase mb-3 block font-mono transition-colors duration-500"
+          className="text-[10px] tracking-[0.4em] uppercase mb-3 block font-mono transition-colors duration-500 font-bold"
           style={{ color: activeTheme.accentColor }}
         >
           Let's Collaborate
         </span>
         <h2
-          className="text-4xl md:text-5xl font-extrabold tracking-tight"
+          className="text-4xl md:text-5xl font-black tracking-tight"
           style={{ fontFamily: "var(--font-heading)", color: "#FAFAFA" }}
         >
           Contact <span className="transition-colors duration-500" style={{ color: activeTheme.accentColor }}>& Assistant</span>
@@ -65,7 +61,7 @@ export default function AboutContactSection() {
           onClick={handleCopyEmail}
           onMouseEnter={() => setHoveredCard("email")}
           onMouseLeave={() => setHoveredCard(null)}
-          className="col-span-1 md:col-span-6 flex items-center justify-between p-6 rounded-2xl border transition-all duration-500 bg-zinc-950/45 text-left relative overflow-hidden"
+          className="col-span-1 md:col-span-6 flex items-center justify-between p-6 rounded-2xl border transition-all duration-500 bg-zinc-950/45 text-left relative overflow-hidden select-none"
           style={{
             borderColor: hoveredCard === "email" ? activeTheme.accentColor : "rgba(255,255,255,0.05)",
             boxShadow: hoveredCard === "email" ? activeTheme.glowShadow : "none",
@@ -73,7 +69,7 @@ export default function AboutContactSection() {
           }}
         >
           {/* Dynamic hover glow overlay */}
-          <div 
+          <div
             className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
             style={{
               background: `radial-gradient(circle at center, ${activeTheme.glowColor} 0%, transparent 70%)`
@@ -102,7 +98,7 @@ export default function AboutContactSection() {
               </svg>
             </div>
             <div>
-              <span className="block text-[8px] tracking-widest text-zinc-500 uppercase font-mono mb-0.5">
+              <span className="block text-[8px] tracking-widest text-zinc-500 uppercase font-mono mb-0.5 font-bold">
                 BUSINESS EMAIL
               </span>
               <span
@@ -174,7 +170,7 @@ export default function AboutContactSection() {
               </svg>
             </div>
             <div>
-              <span className="block text-[8px] tracking-widest text-zinc-500 uppercase font-mono mb-0.5">
+              <span className="block text-[8px] tracking-widest text-zinc-500 uppercase font-mono mb-0.5 font-bold">
                 WHATSAPP ASSISTANT
               </span>
               <span
@@ -196,7 +192,7 @@ export default function AboutContactSection() {
 
         {/* Social Rings Row (md:col-span-12) */}
         <div className="col-span-1 md:col-span-12 border border-white/5 rounded-2xl p-6 bg-zinc-950/20 backdrop-blur-md flex flex-col justify-center">
-          <span className="block text-[9px] tracking-widest text-zinc-500 uppercase mb-4 font-mono text-center">
+          <span className="block text-[9px] tracking-widest text-zinc-500 uppercase mb-4 font-mono text-center font-bold">
             DIRECT SOCIAL CHANNELS
           </span>
           <div className="flex flex-wrap md:flex-nowrap items-center gap-4 w-full">
