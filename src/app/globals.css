@@ -1,26 +1,98 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────
+   Custom Font Families (CSS Variables)
+   ───────────────────────────────────────────── */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-heading: "Syne", "Clash Display", "Neue Montreal", "Montserrat",
+    sans-serif;
+  --font-body: "Outfit", "Satoshi", "Poppins", "Montserrat", sans-serif;
+  --background: #09090b;
+  --foreground: #fafafa;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─────────────────────────────────────────────
+   Global Reset & Base
+   ───────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─────────────────────────────────────────────
+   Custom Scrollbar – Ultra-Thin Premium
+   ───────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(250, 250, 250, 0.1);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(250, 250, 250, 0.2);
+}
+
+/* Firefox scrollbar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(250, 250, 250, 0.1) transparent;
+}
+
+/* ─────────────────────────────────────────────
+   Selection Highlight
+   ───────────────────────────────────────────── */
+
+::selection {
+  background-color: rgba(0, 255, 102, 0.2);
+  color: #fafafa;
+}
+
+::-moz-selection {
+  background-color: rgba(0, 255, 102, 0.2);
+  color: #fafafa;
+}
+
+/* ─────────────────────────────────────────────
+   Cursor Override – hide default on desktop
+   ───────────────────────────────────────────── */
+
+@media (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
 }
