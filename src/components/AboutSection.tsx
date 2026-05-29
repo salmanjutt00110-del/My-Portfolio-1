@@ -18,9 +18,33 @@ const SKILLS: SkillItem[] = [
 
 export default function AboutSection() {
   const { activeTheme } = useThemeEngine();
+  const [leftTilt, setLeftTilt] = React.useState({ x: 0, y: 0 });
+  const [rightTilt, setRightTilt] = React.useState({ x: 0, y: 0 });
+
+  const handleMouseMoveLeft = (e: React.MouseEvent<HTMLDivElement>) => {
+    const box = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - box.left - box.width / 2) / (box.width / 2);
+    const y = (e.clientY - box.top - box.height / 2) / (box.height / 2);
+    setLeftTilt({ x: x * 10, y: -y * 10 });
+  };
+
+  const handleMouseLeaveLeft = () => {
+    setLeftTilt({ x: 0, y: 0 });
+  };
+
+  const handleMouseMoveRight = (e: React.MouseEvent<HTMLDivElement>) => {
+    const box = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - box.left - box.width / 2) / (box.width / 2);
+    const y = (e.clientY - box.top - box.height / 2) / (box.height / 2);
+    setRightTilt({ x: x * 10, y: -y * 10 });
+  };
+
+  const handleMouseLeaveRight = () => {
+    setRightTilt({ x: 0, y: 0 });
+  };
 
   return (
-    <div className="relative w-full h-full flex flex-col justify-center py-20 lg:py-0 px-6 md:px-16 lg:px-24">
+    <div className="relative w-full h-full flex flex-col justify-center py-20 lg:py-0 px-6 md:px-16 lg:px-24" style={{ perspective: "1500px" }}>
       {/* Outer Aesthetic Border */}
       <div
         className="absolute inset-0 pointer-events-none rounded-[32px] border border-white/5 m-4 lg:m-8"
@@ -55,11 +79,19 @@ export default function AboutSection() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch w-full z-20 max-w-6xl text-left">
         
         {/* Left Column: Biography & Experience Timeline */}
-        <div
+        <motion.div
+          onMouseMove={handleMouseMoveLeft}
+          onMouseLeave={handleMouseLeaveLeft}
           className="col-span-1 lg:col-span-6 p-8 rounded-2xl border bg-zinc-950/45 backdrop-blur-xl border-white/5 flex flex-col justify-between"
-          style={{ boxShadow: "0 20px 40px -15px rgba(0,0,0,0.7)" }}
+          style={{ 
+            boxShadow: "0 20px 40px -15px rgba(0,0,0,0.7)",
+            rotateX: leftTilt.y,
+            rotateY: leftTilt.x,
+            transformStyle: "preserve-3d",
+          }}
+          transition={{ type: "spring", stiffness: 120, damping: 25 }}
         >
-          <div>
+          <div style={{ transform: "translateZ(30px)" }}>
             <span className="text-[9px] tracking-[0.3em] font-bold text-zinc-500 uppercase mb-4 block font-mono">
               Core Professional Statement
             </span>
@@ -76,7 +108,7 @@ export default function AboutSection() {
           </div>
 
           {/* Timeline / Highlights */}
-          <div className="border-t border-white/5 pt-6 space-y-4">
+          <div className="border-t border-white/5 pt-6 space-y-4" style={{ transform: "translateZ(20px)" }}>
             <span className="text-[9px] tracking-[0.35em] font-bold text-zinc-500 uppercase block font-mono">
               Milestone Telemetry
             </span>
@@ -92,14 +124,22 @@ export default function AboutSection() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right Column: Skill Bars */}
-        <div
+        <motion.div
+          onMouseMove={handleMouseMoveRight}
+          onMouseLeave={handleMouseLeaveRight}
           className="col-span-1 lg:col-span-6 p-8 rounded-2xl border bg-zinc-950/45 backdrop-blur-xl border-white/5 flex flex-col justify-between gap-6"
-          style={{ boxShadow: "0 20px 40px -15px rgba(0,0,0,0.7)" }}
+          style={{ 
+            boxShadow: "0 20px 40px -15px rgba(0,0,0,0.7)",
+            rotateX: rightTilt.y,
+            rotateY: rightTilt.x,
+            transformStyle: "preserve-3d",
+          }}
+          transition={{ type: "spring", stiffness: 120, damping: 25 }}
         >
-          <div>
+          <div style={{ transform: "translateZ(30px)" }}>
             <span className="text-[9px] tracking-[0.3em] font-bold text-zinc-500 uppercase mb-5 block font-mono">
               Technical Capabilities
             </span>
@@ -131,10 +171,10 @@ export default function AboutSection() {
             </div>
           </div>
 
-          <div className="border-t border-white/5 pt-4 text-[9.5px] font-mono text-zinc-500 leading-relaxed">
+          <div className="border-t border-white/5 pt-4 text-[9.5px] font-mono text-zinc-500 leading-relaxed" style={{ transform: "translateZ(10px)" }}>
             SYSTEM ENGINE STATUS: EXCELLENT // STABLE BRAND SCALING MATRIX CHANNELS ACTIVATED
           </div>
-        </div>
+        </motion.div>
 
       </div>
     </div>

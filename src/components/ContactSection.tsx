@@ -9,6 +9,45 @@ export default function ContactSection() {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
 
+  const [emailTilt, setEmailTilt] = useState({ x: 0, y: 0 });
+  const [waTilt, setWaTilt] = useState({ x: 0, y: 0 });
+  const [socialTilt, setSocialTilt] = useState({ x: 0, y: 0 });
+
+  const handleMouseMoveEmail = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const box = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - box.left - box.width / 2) / (box.width / 2);
+    const y = (e.clientY - box.top - box.height / 2) / (box.height / 2);
+    setEmailTilt({ x: x * 10, y: -y * 10 });
+  };
+
+  const handleMouseLeaveEmail = () => {
+    setEmailTilt({ x: 0, y: 0 });
+    setHoveredCard(null);
+  };
+
+  const handleMouseMoveWa = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const box = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - box.left - box.width / 2) / (box.width / 2);
+    const y = (e.clientY - box.top - box.height / 2) / (box.height / 2);
+    setWaTilt({ x: x * 10, y: -y * 10 });
+  };
+
+  const handleMouseLeaveWa = () => {
+    setWaTilt({ x: 0, y: 0 });
+    setHoveredCard(null);
+  };
+
+  const handleMouseMoveSocial = (e: React.MouseEvent<HTMLDivElement>) => {
+    const box = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - box.left - box.width / 2) / (box.width / 2);
+    const y = (e.clientY - box.top - box.height / 2) / (box.height / 2);
+    setSocialTilt({ x: x * 8, y: -y * 8 });
+  };
+
+  const handleMouseLeaveSocial = () => {
+    setSocialTilt({ x: 0, y: 0 });
+  };
+
   const handleCopyEmail = (e: React.MouseEvent) => {
     e.preventDefault();
     navigator.clipboard.writeText("contact@amirads.pro");
@@ -20,7 +59,7 @@ export default function ContactSection() {
   const whatsappUrl = "https://wa.me/923100128702?text=Hello%20Salman,%20I%20would%20like%20to%20discuss%20a%20premium%20creative%20project%20with%20you.";
 
   return (
-    <div className="relative w-full h-full flex flex-col justify-center py-20 lg:py-0 px-6 md:px-16 lg:px-24">
+    <div className="relative w-full h-full flex flex-col justify-center py-20 lg:py-0 px-6 md:px-16 lg:px-24" style={{ perspective: "1500px" }}>
       {/* Outer Aesthetic Border */}
       <div
         className="absolute inset-0 pointer-events-none rounded-[32px] border m-4 lg:m-8 transition-colors duration-500"
@@ -57,16 +96,21 @@ export default function ContactSection() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch w-full z-20 max-w-5xl text-left">
         
         {/* Direct Email Card (md:col-span-6) */}
-        <button
+        <motion.button
           onClick={handleCopyEmail}
+          onMouseMove={handleMouseMoveEmail}
+          onMouseLeave={handleMouseLeaveEmail}
           onMouseEnter={() => setHoveredCard("email")}
-          onMouseLeave={() => setHoveredCard(null)}
           className="col-span-1 md:col-span-6 flex items-center justify-between p-6 rounded-2xl border transition-all duration-500 bg-zinc-950/45 text-left relative overflow-hidden select-none"
           style={{
             borderColor: hoveredCard === "email" ? activeTheme.accentColor : "rgba(255,255,255,0.05)",
             boxShadow: hoveredCard === "email" ? activeTheme.glowShadow : "none",
             cursor: "pointer",
+            rotateX: emailTilt.y,
+            rotateY: emailTilt.x,
+            transformStyle: "preserve-3d",
           }}
+          transition={{ type: "spring", stiffness: 120, damping: 25 }}
         >
           {/* Dynamic hover glow overlay */}
           <div
@@ -76,7 +120,7 @@ export default function ContactSection() {
             }}
           />
 
-          <div className="flex items-center gap-4 relative z-10">
+          <div className="flex items-center gap-4 relative z-10" style={{ transform: "translateZ(30px)" }}>
             <div
               className="w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-300"
               style={{
@@ -123,33 +167,39 @@ export default function ContactSection() {
                 style={{
                   borderColor: `${activeTheme.accentColor}30`,
                   color: activeTheme.accentColor,
+                  transform: "translateZ(30px)",
                 }}
               >
                 COPIED!
               </motion.span>
             ) : (
-              <span className="text-[10px] text-zinc-500 font-mono tracking-widest uppercase relative z-10 pr-2">
+              <span className="text-[10px] text-zinc-500 font-mono tracking-widest uppercase relative z-10 pr-2" style={{ transform: "translateZ(30px)" }}>
                 COPY
               </span>
             )}
           </AnimatePresence>
-        </button>
+        </motion.button>
 
         {/* WhatsApp Assistant Connection (md:col-span-6) */}
-        <a
+        <motion.a
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onMouseMove={handleMouseMoveWa}
+          onMouseLeave={handleMouseLeaveWa}
           onMouseEnter={() => setHoveredCard("whatsapp")}
-          onMouseLeave={() => setHoveredCard(null)}
           className="col-span-1 md:col-span-6 flex items-center justify-between p-6 rounded-2xl border transition-all duration-500 bg-zinc-950/45 text-left relative overflow-hidden group select-none block"
           style={{
             borderColor: hoveredCard === "whatsapp" ? activeTheme.accentColor : "rgba(255,255,255,0.05)",
             boxShadow: hoveredCard === "whatsapp" ? activeTheme.glowShadow : "none",
             cursor: "pointer",
+            rotateX: waTilt.y,
+            rotateY: waTilt.x,
+            transformStyle: "preserve-3d",
           }}
+          transition={{ type: "spring", stiffness: 120, damping: 25 }}
         >
-          <div className="flex items-center gap-4 relative z-10">
+          <div className="flex items-center gap-4 relative z-10" style={{ transform: "translateZ(30px)" }}>
             <div
               className="w-11 h-11 rounded-full border flex items-center justify-center transition-all duration-300"
               style={{
@@ -185,17 +235,28 @@ export default function ContactSection() {
             </div>
           </div>
 
-          <span className="text-[10px] text-zinc-500 font-mono tracking-widest uppercase relative z-10 pr-2 group-hover:text-white transition-colors duration-300">
+          <span className="text-[10px] text-zinc-500 font-mono tracking-widest uppercase relative z-10 pr-2 group-hover:text-white transition-colors duration-300" style={{ transform: "translateZ(30px)" }}>
             CONNECT
           </span>
-        </a>
+        </motion.a>
 
         {/* Social Rings Row (md:col-span-12) */}
-        <div className="col-span-1 md:col-span-12 border border-white/5 rounded-2xl p-6 bg-zinc-950/20 backdrop-blur-md flex flex-col justify-center">
-          <span className="block text-[9px] tracking-widest text-zinc-500 uppercase mb-4 font-mono text-center font-bold">
+        <motion.div
+          onMouseMove={handleMouseMoveSocial}
+          onMouseLeave={handleMouseLeaveSocial}
+          className="col-span-1 md:col-span-12 border border-white/5 rounded-2xl p-6 bg-zinc-950/20 backdrop-blur-md flex flex-col justify-center"
+          style={{
+            rotateX: socialTilt.y,
+            rotateY: socialTilt.x,
+            transformStyle: "preserve-3d",
+            boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
+          }}
+          transition={{ type: "spring", stiffness: 120, damping: 25 }}
+        >
+          <span className="block text-[9px] tracking-widest text-zinc-500 uppercase mb-4 font-mono text-center font-bold" style={{ transform: "translateZ(20px)" }}>
             DIRECT SOCIAL CHANNELS
           </span>
-          <div className="flex flex-wrap md:flex-nowrap items-center gap-4 w-full">
+          <div className="flex flex-wrap md:flex-nowrap items-center gap-4 w-full" style={{ transform: "translateZ(30px)" }}>
             {[
               { name: "Instagram", url: "https://instagram.com" },
               { name: "Facebook", url: "https://facebook.com" },
@@ -230,7 +291,7 @@ export default function ContactSection() {
               </a>
             ))}
           </div>
-        </div>
+        </motion.div>
 
       </div>
     </div>

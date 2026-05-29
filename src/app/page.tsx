@@ -452,8 +452,8 @@ function PageInner() {
                 description="High-end corporate branding, luxury watch boutique layouts, and modern vectors designed for global target conversions."
                 specs={["Swiss Luxury Layouts", "3D Brand Assets", "High-Contrast Typography"]}
                 metrics="Design Systems: 100% Custom"
-                stats="50+ Brands"
-                statsLabel="Visual Identities Created"
+                stats="50+"
+                statsLabel="Brands Served Globally"
                 accentColor="#00FF66"
                 gradientFrom="#00FF66"
                 gradientTo="#00FFCC"
@@ -468,8 +468,8 @@ function PageInner() {
                 description="Tactical post-production suite including cinematic grading, Ray-Traced 3D logo overlays, and immersive soundscapes."
                 specs={["60.00 FPS Telemetry", "Emerald Rec.709 Space", "4D Octane Engine Lighting"]}
                 metrics="Render Engine: Octane 4D"
-                stats="100+ Commercials"
-                statsLabel="Edited & Delivered"
+                stats="100+"
+                statsLabel="Commercials Edited & Delivered"
                 accentColor="#E4E4E7"
                 gradientFrom="#E4E4E7"
                 gradientTo="#A1A1AA"
@@ -484,8 +484,8 @@ function PageInner() {
                 description="Pixel-perfect Next.js frameworks and strict type-safe TypeScript architectures engineered for maximum speed."
                 specs={["Next.js & Server Components", "Tailwind CSS Layouts", "GSAP Scroll Timelines"]}
                 metrics="Deployment Speed: 100/100 LCP"
-                stats="30+ Apps"
-                statsLabel="High-Performance Workspaces"
+                stats="30+"
+                statsLabel="High-Performance Apps Built"
                 accentColor="#00F0FF"
                 gradientFrom="#00F0FF"
                 gradientTo="#0070F3"
@@ -500,7 +500,7 @@ function PageInner() {
                 description="Advanced ROAS optimization matrices, international ad scale strategies, and high-intent targeting setups."
                 specs={["4-5 Years Meta Scale", "USA/UK Demographics", "ROAS Optimization"]}
                 metrics="Performance Yield: +380% ROAS"
-                stats="$150k+ Spend"
+                stats="$150K+"
                 statsLabel="Managed Ad Budgets"
                 accentColor="#F59E0B"
                 gradientFrom="#F59E0B"

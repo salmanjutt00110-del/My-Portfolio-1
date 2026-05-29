@@ -5,8 +5,8 @@
    ───────────────────────────────────────────── */
 
 :root {
-  --font-heading: "Syne", "Clash Display", "Neue Montreal", "Montserrat", sans-serif;
-  --font-body: "Outfit", "Satoshi", "Poppins", "Montserrat", sans-serif;
+  --font-heading: "Montserrat", "Outfit", sans-serif;
+  --font-body: "Outfit", "Satoshi", sans-serif;
   --font-mono: "Space Grotesk", "Space Mono", monospace;
   --background: #09090b;
   --foreground: #fafafa;
