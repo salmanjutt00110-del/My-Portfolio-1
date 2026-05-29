@@ -33,27 +33,21 @@ interface SingleVideoProps {
 function SingleVideo({ video, isActive }: SingleVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // Play once on mount just to be safe, but never pause programmatically on scroll
   useEffect(() => {
     const videoEl = videoRef.current;
     if (!videoEl) return;
-
-    if (isActive) {
-      // Ensure the video plays and loops smoothly
-      videoEl.play().catch(() => {
-        /* Autoplay block fallback */
-      });
-    } else {
-      // Pause inactive videos to save CPU/GPU resource
-      videoEl.pause();
-    }
-  }, [isActive]);
+    videoEl.play().catch(() => {
+      /* Safe catch for autoplay constraints */
+    });
+  }, []);
 
   return (
     <motion.div
       className="absolute inset-0 w-full h-full transform-gpu backface-visibility-hidden translate-z-0 will-change-[opacity,transform]"
       initial={{ opacity: 0 }}
       animate={{ opacity: isActive ? 1 : 0 }}
-      transition={{ duration: 1.0, ease: "easeInOut" }}
+      transition={{ duration: 1.2, ease: "easeInOut" }}
       style={{ zIndex: isActive ? 1 : 0 }}
     >
       <video
@@ -67,7 +61,7 @@ function SingleVideo({ video, isActive }: SingleVideoProps) {
         preload="auto"
         style={{
           pointerEvents: "none",
-          filter: "brightness(0.75) contrast(1.20) saturate(1.15)",
+          filter: "brightness(0.70) contrast(1.15) saturate(1.10)",
           transform: "translate3d(0, 0, 0)",
           WebkitTransform: "translate3d(0, 0, 0)",
           backfaceVisibility: "hidden",
@@ -127,12 +121,12 @@ export default function BackgroundVideo() {
         />
       ))}
 
-      {/* ── Dark Overlay for Hero and content readability ── */}
+      {/* ── Subtle Dark Overlay — keeps videos vivid ── */}
       <div
         className="absolute inset-0 pointer-events-none transition-all duration-700"
         style={{
           zIndex: 5,
-          backgroundColor: activeIndex === 0 ? "rgba(9, 9, 11, 0.75)" : "rgba(9, 9, 11, 0.65)",
+          backgroundColor: activeIndex === 0 ? "rgba(9, 9, 11, 0.45)" : "rgba(9, 9, 11, 0.35)",
         }}
       />
 

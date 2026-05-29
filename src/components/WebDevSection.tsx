@@ -52,9 +52,21 @@ const WORK_PROJECTS: WorkProject[] = [
 export default function WebDevSection() {
   const { activeTheme } = useThemeEngine();
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const [tilts, setTilts] = useState<Record<number, { x: number; y: number }>>({});
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>, id: number) => {
+    const box = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - box.left - box.width / 2) / (box.width / 2);
+    const y = (e.clientY - box.top - box.height / 2) / (box.height / 2);
+    setTilts((prev) => ({ ...prev, [id]: { x: x * 10, y: -y * 10 } }));
+  };
+
+  const handleMouseLeave = (id: number) => {
+    setTilts((prev) => ({ ...prev, [id]: { x: 0, y: 0 } }));
+  };
 
   return (
-    <div className="relative w-full h-full flex flex-col justify-center py-20 lg:py-0 px-6 md:px-16 lg:px-24">
+    <div className="relative w-full h-full flex flex-col justify-center py-20 lg:py-0 px-6 md:px-16 lg:px-24" style={{ perspective: "1500px" }}>
       {/* Outer Aesthetic Border */}
       <div
         className="absolute inset-0 pointer-events-none rounded-[32px] border border-white/5 m-4 lg:m-8"
@@ -90,13 +102,17 @@ export default function WebDevSection() {
         {WORK_PROJECTS.map((project) => {
           const isHovered = hoveredCard === project.id;
           return (
-            <a
+            <motion.a
               key={project.id}
               href={project.url}
               target="_blank"
               rel="noopener noreferrer"
+              onMouseMove={(e) => handleMouseMove(e, project.id)}
+              onMouseLeave={() => {
+                handleMouseLeave(project.id);
+                setHoveredCard(null);
+              }}
               onMouseEnter={() => setHoveredCard(project.id)}
-              onMouseLeave={() => setHoveredCard(null)}
               className="relative rounded-2xl p-8 flex flex-col justify-between min-h-[300px] border transition-all duration-500 bg-zinc-950/40 border-white/5 block overflow-hidden group select-none"
               style={{
                 backdropFilter: "blur(20px)",
@@ -106,7 +122,11 @@ export default function WebDevSection() {
                   : "0 15px 30px -15px rgba(0,0,0,0.6)",
                 borderColor: isHovered ? activeTheme.accentColor : "rgba(255, 255, 255, 0.05)",
                 cursor: "pointer",
+                rotateX: tilts[project.id]?.y || 0,
+                rotateY: tilts[project.id]?.x || 0,
+                transformStyle: "preserve-3d",
               }}
+              transition={{ type: "spring", stiffness: 120, damping: 25 }}
             >
               {/* Dynamic card hover glow overlay */}
               <div
@@ -125,7 +145,7 @@ export default function WebDevSection() {
                 }}
               />
 
-              <div>
+              <div style={{ transform: "translateZ(30px)" }}>
                 {/* Header Category and Status tag */}
                 <div className="flex items-center justify-between mb-4">
                   <span
@@ -165,7 +185,7 @@ export default function WebDevSection() {
               </div>
 
               {/* Technologies used & Performance specs */}
-              <div className="flex flex-col gap-4 border-t border-white/5 pt-6 mt-6">
+              <div className="flex flex-col gap-4 border-t border-white/5 pt-6 mt-6" style={{ transform: "translateZ(20px)" }}>
                 {/* Mini Tech tags with hover color effect */}
                 <div className="flex flex-wrap gap-1.5">
                   {project.techTags.map((tag, idx) => (
@@ -207,7 +227,7 @@ export default function WebDevSection() {
                   </span>
                 </div>
               </div>
-            </a>
+            </motion.a>
           );
         })}
       </div>

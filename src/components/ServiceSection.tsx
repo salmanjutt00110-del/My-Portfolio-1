@@ -35,9 +35,50 @@ export default function ServiceSection({
   glowShadow,
 }: ServiceSectionProps) {
   const [hovered, setHovered] = useState<boolean>(false);
+  const [leftTilt, setLeftTilt] = useState({ x: 0, y: 0 });
+  const [rightTilt, setRightTilt] = useState({ x: 0, y: 0 });
+
+  const handleMouseMoveLeft = (e: React.MouseEvent<HTMLDivElement>) => {
+    const box = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - box.left - box.width / 2) / (box.width / 2);
+    const y = (e.clientY - box.top - box.height / 2) / (box.height / 2);
+    setLeftTilt({ x: x * 12, y: -y * 12 });
+  };
+
+  const handleMouseLeaveLeft = () => {
+    setLeftTilt({ x: 0, y: 0 });
+  };
+
+  const handleMouseMoveRight = (e: React.MouseEvent<HTMLDivElement>) => {
+    const box = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - box.left - box.width / 2) / (box.width / 2);
+    const y = (e.clientY - box.top - box.height / 2) / (box.height / 2);
+    setRightTilt({ x: x * 12, y: -y * 12 });
+    setHovered(true);
+  };
+
+  const handleMouseLeaveRight = () => {
+    setRightTilt({ x: 0, y: 0 });
+    setHovered(false);
+  };
+
+  const humorousDiagnostic = React.useMemo(() => {
+    switch (index) {
+      case 1:
+        return "WARNING: COMPONENT STYLED WITH ULTRA-HIGH DRIP RATIO";
+      case 2:
+        return "PIPELINE: AUDIO GRADIENTS INDUCE UNINTENDED GOOSEBUMPS";
+      case 3:
+        return "COMPILER: 100/100 LCP DETECTED. SPEED LIMIT VIOLATED";
+      case 4:
+        return "TELEMETRY: TARGETING USA/UK DEMOS. SCALE SET TO ROAS MATRIX";
+      default:
+        return "CHANNELS: PRISTINE OPERATIONS CHANNELS ACTIVATED";
+    }
+  }, [index]);
 
   return (
-    <div className="relative w-full h-full flex flex-col justify-center py-20 lg:py-0 px-6 md:px-16 lg:px-24">
+    <div className="relative w-full h-full flex flex-col justify-center py-20 lg:py-0 px-6 md:px-16 lg:px-24" style={{ perspective: "1500px" }}>
       {/* Background Glow Sphere */}
       <div
         className="absolute -right-24 top-1/4 w-[400px] h-[400px] rounded-full blur-[120px] pointer-events-none opacity-20 transition-all duration-700"
@@ -101,12 +142,20 @@ export default function ServiceSection({
       {/* Main Grid Content */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch w-full z-20 max-w-6xl text-left">
         
-        {/* Left Column: Headline and Specs */}
-        <div
-          className="col-span-1 lg:col-span-7 flex flex-col justify-between p-5 md:p-10 rounded-2xl backdrop-blur-md bg-black/40 border border-white/10 transition-all duration-500"
-          style={{ borderColor: hovered ? `${accentColor}25` : undefined }}
+        {/* Left Column: Headline and Specs (With Interactive Mouse Tilt) */}
+        <motion.div
+          onMouseMove={handleMouseMoveLeft}
+          onMouseLeave={handleMouseLeaveLeft}
+          className="col-span-1 lg:col-span-7 flex flex-col justify-between p-5 md:p-10 rounded-2xl backdrop-blur-md bg-black/40 border border-white/10"
+          style={{ 
+            borderColor: hovered ? `${accentColor}25` : undefined,
+            rotateX: leftTilt.y,
+            rotateY: leftTilt.x,
+            transformStyle: "preserve-3d",
+          }}
+          transition={{ type: "spring", stiffness: 120, damping: 25 }}
         >
-          <div className="flex flex-col h-full justify-between gap-8">
+          <div className="flex flex-col h-full justify-between gap-8" style={{ transform: "translateZ(30px)" }}>
             <div>
               <span
                 className="text-[9px] tracking-[0.25em] font-semibold uppercase mb-3 block font-mono transition-colors duration-500 drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)]"
@@ -159,17 +208,21 @@ export default function ServiceSection({
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Right Column: Interactive Card */}
-        <div
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          className="col-span-1 lg:col-span-5 flex flex-col justify-between p-5 md:p-8 rounded-2xl backdrop-blur-md bg-black/40 border border-white/10 transition-all duration-500 relative overflow-hidden group"
+        {/* Right Column: Interactive Card (With Interactive Mouse Tilt) */}
+        <motion.div
+          onMouseMove={handleMouseMoveRight}
+          onMouseLeave={handleMouseLeaveRight}
+          className="col-span-1 lg:col-span-5 flex flex-col justify-between p-5 md:p-8 rounded-2xl backdrop-blur-md bg-black/40 border border-white/10 relative overflow-hidden group"
           style={{
             borderColor: hovered ? accentColor : "rgba(255, 255, 255, 0.10)",
             boxShadow: hovered ? glowShadow : "none",
+            rotateX: rightTilt.y,
+            rotateY: rightTilt.x,
+            transformStyle: "preserve-3d",
           }}
+          transition={{ type: "spring", stiffness: 120, damping: 25 }}
         >
           {/* Accent border bar on top */}
           <div
@@ -180,7 +233,7 @@ export default function ServiceSection({
             }}
           />
 
-          <div className="flex flex-col h-full justify-between gap-8">
+          <div className="flex flex-col h-full justify-between gap-8" style={{ transform: "translateZ(30px)" }}>
             {/* Status Indicator */}
             <div className="flex items-center justify-between border-b border-white/5 pb-4">
               <div className="flex items-center gap-2">
@@ -217,7 +270,7 @@ export default function ServiceSection({
               </span>
             </div>
 
-            {/* Console Output Footer */}
+            {/* Witty Console Output Footer */}
             <div className="rounded-lg bg-zinc-950/80 border border-white/5 p-3 font-mono text-[9px] text-zinc-400 space-y-1">
               <div className="flex justify-between">
                 <span className="text-zinc-600">ENGINE:</span>
@@ -231,9 +284,12 @@ export default function ServiceSection({
                 <span className="text-zinc-600">OVERLAY:</span>
                 <span style={{ color: accentColor }}>ACTIVE GRIDS</span>
               </div>
+              <div className="border-t border-white/5 pt-1.5 mt-1.5 text-[8.5px] leading-tight select-all text-zinc-500 break-words font-mono">
+                {humorousDiagnostic}
+              </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
       </div>
     </div>

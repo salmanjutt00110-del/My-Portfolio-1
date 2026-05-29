@@ -136,190 +136,265 @@ function SectionIndicator() {
 
 function HeroContent() {
   const { activeTheme } = useThemeEngine();
+  const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
 
-  // Name animation letters mapping
-  const nameText = "MUHAMMAD SALMAN";
-  const nameLetters = Array.from(nameText);
+  React.useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      const x = (e.clientX - innerWidth / 2) / (innerWidth / 2);
+      const y = (e.clientY - innerHeight / 2) / (innerHeight / 2);
+      setMousePos({ x, y });
+    };
 
-  // Floating particles helper
-  const particles = Array.from({ length: 15 });
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  // Compute 3D rotations based on mouse coordinates (with auto-floating fallback for mobile)
+  const rotateX = mousePos.y * -18;
+  const rotateY = mousePos.x * 18;
+
+  // Floating orbs — bigger, glowing, 3D-like
+  const orbs = Array.from({ length: 8 });
 
   return (
-    <div className="relative z-10 flex flex-col items-start justify-center h-full px-8 md:px-20 lg:px-32 w-full max-w-5xl text-left select-none overflow-hidden">
-      {/* Floating particles background */}
-      {particles.map((_, idx) => (
-        <motion.div
-          key={idx}
-          className="absolute rounded-full pointer-events-none opacity-20"
-          style={{
-            width: Math.random() * 6 + 2,
-            height: Math.random() * 6 + 2,
-            backgroundColor: activeTheme.accentColor,
-            top: `${Math.random() * 80 + 10}%`,
-            left: `${Math.random() * 80 + 10}%`,
-          }}
-          animate={{
-            y: [0, Math.random() * -50 - 20, 0],
-            opacity: [0.15, 0.4, 0.15],
-          }}
-          transition={{
-            duration: Math.random() * 6 + 4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
+    <div
+      className="relative z-10 flex flex-col items-start justify-center h-full px-8 md:px-20 lg:px-32 w-full max-w-6xl text-left select-none overflow-hidden"
+      style={{ perspective: "1200px" }}
+    >
+      {/* ── 3D Floating Glowing Orbs ── */}
+      {orbs.map((_, idx) => {
+        const size = 30 + Math.random() * 80;
+        return (
+          <motion.div
+            key={idx}
+            className="absolute rounded-full pointer-events-none blur-2xl"
+            style={{
+              width: size,
+              height: size,
+              background: `radial-gradient(circle, ${idx % 2 === 0 ? "rgba(0,255,102,0.25)" : "rgba(0,240,255,0.2)"} 0%, transparent 70%)`,
+              top: `${15 + Math.random() * 60}%`,
+              left: `${10 + Math.random() * 70}%`,
+            }}
+            animate={{
+              y: [0, -(30 + Math.random() * 40), 0],
+              x: [0, (Math.random() - 0.5) * 30, 0],
+              scale: [1, 1.15, 1],
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{
+              duration: 5 + Math.random() * 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        );
+      })}
 
-      {/* Overline brand tag */}
+      {/* ── Overline Brand Tag ── */}
       <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        viewport={{ once: true }}
-        className="flex items-center gap-3 mb-5"
+        initial={{ opacity: 0, x: -30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.7, delay: 0.1 }}
+        className="flex items-center gap-3 mb-6"
       >
         <span
-          className="inline-block w-8 h-[1px]"
-          style={{ backgroundColor: activeTheme.accentColor }}
+          className="inline-block w-12 h-[2px] rounded-full"
+          style={{ background: `linear-gradient(to right, ${activeTheme.gradientFrom}, ${activeTheme.gradientTo})` }}
         />
         <span
-          className="text-[10px] tracking-[0.35em] uppercase font-bold text-zinc-500 font-mono"
+          className="text-[11px] tracking-[0.4em] uppercase font-bold bg-gradient-to-r bg-clip-text text-transparent"
+          style={{
+            backgroundImage: `linear-gradient(to right, ${activeTheme.gradientFrom}, rgba(255,255,255,0.7))`,
+            fontFamily: "var(--font-mono)",
+          }}
         >
-          Creative Portfolio
+          Creative Portfolio — 2024
         </span>
       </motion.div>
 
-      {/* Main Headline with letter stagger */}
-      <div className="mb-4">
+      {/* ── 3D Perspective Main Headline ── */}
+      <motion.div
+        className="mb-6"
+        initial={{ opacity: 0, rotateX: 25, y: 60 }}
+        animate={{ 
+          opacity: 1, 
+          rotateX: rotateX, 
+          rotateY: rotateY, 
+          y: 0 
+        }}
+        transition={{ 
+          type: "spring", 
+          stiffness: 85, 
+          damping: 20, 
+          mass: 0.5 
+        }}
+        style={{ transformStyle: "preserve-3d" }}
+      >
         <h1
-          className="text-[clamp(2.2rem,6.5vw,5.5rem)] font-black leading-[0.92] tracking-tight text-white mb-2"
-          style={{ fontFamily: "var(--font-heading)" }}
-        >
-          {nameLetters.map((char, index) => (
-            <motion.span
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                delay: index * 0.05 + 0.2,
-                duration: 0.6,
-                ease: "easeOut",
-              }}
-              style={{ display: "inline-block", marginRight: char === " " ? "0.4em" : "0" }}
-            >
-              {char}
-            </motion.span>
-          ))}
-        </h1>
-
-        <motion.h1
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: nameLetters.length * 0.05 + 0.3, duration: 0.6 }}
-          className="text-[clamp(1.8rem,5.5vw,4.5rem)] font-black leading-[0.95] tracking-tight bg-gradient-to-r bg-clip-text text-transparent"
+          className="text-[clamp(2.8rem,8vw,7rem)] font-black leading-[0.88] tracking-[-0.03em] text-transparent bg-clip-text"
           style={{
             fontFamily: "var(--font-heading)",
-            backgroundImage: `linear-gradient(135deg, ${activeTheme.gradientFrom} 0%, #FFFFFF 50%, ${activeTheme.gradientTo} 100%)`,
-            textShadow: activeTheme.glowShadow,
+            backgroundImage: "linear-gradient(180deg, #FFFFFF 0%, rgba(255,255,255,0.85) 40%, rgba(255,255,255,0.55) 100%)",
+            filter: "drop-shadow(0 6px 25px rgba(0,0,0,0.8))",
+            transform: "translateZ(50px)",
           }}
         >
-          (SHANI)
-        </motion.h1>
-      </div>
-
-      {/* Typewriter-style Subtitle */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.5 }}
-        className="mb-5"
-      >
-        <h2 className="text-xs md:text-sm tracking-[0.3em] font-extrabold uppercase font-mono text-zinc-400 overflow-hidden whitespace-nowrap border-r-2 border-white/80 animate-pulse">
-          Creative Digital Specialist
-        </h2>
-      </motion.div>
-
-      {/* Tagline */}
-      <motion.p
-        initial={{ opacity: 0, y: 15 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 1.4 }}
-        viewport={{ once: true }}
-        className="max-w-md text-sm md:text-base leading-relaxed text-zinc-500 mb-8 font-medium"
-        style={{ fontFamily: "var(--font-body)" }}
-      >
-        Crafting High-End Immersive Experiences For Modern Brands.
-      </motion.p>
-
-      {/* CTA Trigger */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 1.6 }}
-        viewport={{ once: true }}
-        className="flex items-center gap-4"
-      >
-        <a
-          href="#graphic-design"
-          className="inline-flex items-center gap-2 px-7 py-3 text-xs font-bold tracking-widest uppercase rounded-full transition-all duration-300 hover:scale-105"
+          MUHAMMAD
+        </h1>
+        <h1
+          className="text-[clamp(2.8rem,8vw,7rem)] font-black leading-[0.88] tracking-[-0.03em] text-transparent bg-clip-text"
           style={{
-            backgroundColor: activeTheme.accentColor,
-            color: "#09090B",
-            fontFamily: "var(--font-body)",
-            boxShadow: activeTheme.glowShadow,
+            fontFamily: "var(--font-heading)",
+            backgroundImage: "linear-gradient(180deg, #FFFFFF 0%, rgba(255,255,255,0.85) 40%, rgba(255,255,255,0.55) 100%)",
+            filter: "drop-shadow(0 6px 25px rgba(0,0,0,0.8))",
+            transform: "translateZ(50px)",
           }}
         >
-          View Services
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3.0"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M5 12h14M12 5l7 7-7 7" />
-          </svg>
-        </a>
+          SALMAN
+        </h1>
       </motion.div>
 
-      {/* Minimalist Metrics Stats Bar */}
+      {/* ── Gradient "(SHANI)" with 3D Pop ── */}
+      <motion.h2
+        initial={{ opacity: 0, rotateX: 20, scale: 0.85 }}
+        animate={{ 
+          opacity: 1, 
+          rotateX: rotateX * 0.7, 
+          rotateY: rotateY * 0.7, 
+          scale: 1 
+        }}
+        transition={{ 
+          type: "spring", 
+          stiffness: 85, 
+          damping: 20, 
+          mass: 0.6 
+        }}
+        className="text-[clamp(2.2rem,6vw,5.5rem)] font-black leading-[0.9] tracking-[-0.02em] mb-6 bg-clip-text text-transparent"
+        style={{
+          fontFamily: "var(--font-heading)",
+          backgroundImage: `linear-gradient(135deg, ${activeTheme.gradientFrom} 0%, #FFFFFF 35%, ${activeTheme.gradientTo} 70%, #A855F7 100%)`,
+          filter: `drop-shadow(0 0 40px ${activeTheme.glowColor}) drop-shadow(0 4px 20px rgba(0,0,0,0.8))`,
+          transformStyle: "preserve-3d",
+          transform: "translateZ(30px)",
+        }}
+      >
+        (SHANI)
+      </motion.h2>
+
+      {/* ── Animated Subtitle with Gradient Line ── */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.8, duration: 0.7 }}
-        className="flex flex-wrap items-center gap-6 md:gap-12 mt-12 border-t border-white/5 pt-8 text-[10px] font-mono tracking-widest text-zinc-500 w-full"
+        transition={{ delay: 1.3, duration: 0.6 }}
+        className="flex items-center gap-4 mb-6"
       >
-        <div>
-          <span className="text-white font-bold block text-xs md:text-sm font-heading">4+ YEARS</span>
-          EXPERIENCE
-        </div>
-        <div className="w-[1px] h-6 bg-white/5 hidden md:block" />
-        <div>
-          <span className="text-white font-bold block text-xs md:text-sm font-heading">50+ PROJECTS</span>
-          COMPLETED
-        </div>
-        <div className="w-[1px] h-6 bg-white/5 hidden md:block" />
-        <div>
-          <span className="text-white font-bold block text-xs md:text-sm font-heading">100%</span>
-          CLIENT SATISFACTION
-        </div>
+        <div
+          className="h-[1px] w-16"
+          style={{ background: `linear-gradient(to right, ${activeTheme.gradientFrom}, transparent)` }}
+        />
+        <h3
+          className="text-sm md:text-base tracking-[0.25em] font-bold uppercase bg-clip-text text-transparent"
+          style={{
+            backgroundImage: "linear-gradient(to right, rgba(255,255,255,0.95), rgba(255,255,255,0.5))",
+            fontFamily: "var(--font-mono)",
+          }}
+        >
+          Creative Digital Specialist
+        </h3>
+      </motion.div>
+
+      {/* ── Tagline ── */}
+      <motion.p
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 1.5 }}
+        className="max-w-lg text-sm md:text-lg leading-relaxed font-medium mb-10"
+        style={{
+          fontFamily: "var(--font-body)",
+          color: "rgba(255,255,255,0.6)",
+          textShadow: "0 2px 12px rgba(0,0,0,0.7)",
+        }}
+      >
+        Crafting High-End Immersive Experiences For Modern Brands — 
+        Design, Video, Web, & Marketing.
+      </motion.p>
+
+      {/* ── Dual CTA Buttons ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 1.7 }}
+        className="flex flex-wrap items-center gap-4 mb-12"
+      >
+        <a
+          href="#graphic-design"
+          className="inline-flex items-center gap-2.5 px-8 py-3.5 text-xs font-black tracking-widest uppercase rounded-full transition-all duration-300 hover:scale-105 hover:brightness-110"
+          style={{
+            background: `linear-gradient(135deg, ${activeTheme.gradientFrom}, ${activeTheme.gradientTo})`,
+            color: "#09090B",
+            fontFamily: "var(--font-body)",
+            boxShadow: `0 0 30px ${activeTheme.glowColor}, 0 4px 15px rgba(0,0,0,0.4)`,
+          }}
+        >
+          View Services
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+        <a
+          href="#contact"
+          className="inline-flex items-center gap-2 px-8 py-3.5 text-xs font-bold tracking-widest uppercase rounded-full border transition-all duration-300 hover:scale-105"
+          style={{
+            borderColor: "rgba(255,255,255,0.15)",
+            color: "rgba(255,255,255,0.8)",
+            fontFamily: "var(--font-body)",
+            backdropFilter: "blur(8px)",
+            background: "rgba(255,255,255,0.05)",
+          }}
+        >
+          Get in Touch
+        </a>
+      </motion.div>
+
+      {/* ── Premium Metrics Stats Bar ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.0, duration: 0.7 }}
+        className="flex flex-wrap items-center gap-8 md:gap-14 border-t border-white/10 pt-8 w-full"
+      >
+        {[
+          { value: "4+", label: "Years Experience" },
+          { value: "50+", label: "Projects Delivered" },
+          { value: "100%", label: "Client Satisfaction" },
+        ].map((stat, idx) => (
+          <div key={idx} className="flex flex-col">
+            <span
+              className="text-2xl md:text-3xl font-black bg-clip-text text-transparent leading-none mb-1"
+              style={{
+                fontFamily: "var(--font-heading)",
+                backgroundImage: `linear-gradient(135deg, ${activeTheme.gradientFrom}, #FFFFFF)`,
+              }}
+            >
+              {stat.value}
+            </span>
+            <span
+              className="text-[9px] md:text-[10px] tracking-[0.25em] uppercase font-bold"
+              style={{ color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-mono)" }}
+            >
+              {stat.label}
+            </span>
+          </div>
+        ))}
       </motion.div>
     </div>
   );
 }
 
-/* ─────────────────────────────────────────────
-   Page Inner (Context Consumer)
-   ───────────────────────────────────────────── */
-
 function PageInner() {
   const { activeIndex, setActiveIndex } = useThemeEngine();
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
-  const touchStartY = useRef<number>(0);
-  const swipeCooldown = useRef<boolean>(false);
 
   /* IntersectionObserver to auto-update active index on scroll */
   useEffect(() => {
@@ -337,7 +412,7 @@ function PageInner() {
             }
           });
         },
-        { threshold: isMobile ? 0.25 : 0.55 }
+        { threshold: isMobile ? 0.3 : 0.5 }
       );
 
       observer.observe(el);
@@ -349,58 +424,15 @@ function PageInner() {
     };
   }, [setActiveIndex]);
 
-  /* Touch Swiping Handlers */
-  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    touchStartY.current = e.touches[0].clientY;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (swipeCooldown.current) return;
-
-    const touchEndY = e.changedTouches[0].clientY;
-    const diffY = touchStartY.current - touchEndY;
-
-    if (Math.abs(diffY) > 50) {
-      let targetIndex = activeIndex;
-
-      if (diffY > 0) {
-        // Swipe Up (Scroll Down)
-        targetIndex = Math.min(activeIndex + 1, SECTIONS.length - 1);
-      } else {
-        // Swipe Down (Scroll Up)
-        targetIndex = Math.max(activeIndex - 1, 0);
-      }
-
-      if (targetIndex !== activeIndex) {
-        swipeCooldown.current = true;
-        setActiveIndex(targetIndex);
-
-        const targetId = SECTIONS[targetIndex].id;
-        const el = document.getElementById(targetId);
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth" });
-        }
-
-        setTimeout(() => {
-          swipeCooldown.current = false;
-        }, 850);
-      }
-    }
-  };
-
   return (
-    <div
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-      className="relative w-full h-screen overflow-hidden"
-    >
+    <div className="relative w-full h-screen overflow-hidden">
       <BackgroundVideo />
       <CustomCursor />
       <Navbar />
       <SectionIndicator />
 
-      {/* ── Scroll-Snap Page Container ── */}
-      <main className="relative z-10 h-screen overflow-y-auto snap-none lg:snap-y lg:snap-mandatory scroll-smooth">
+      {/* ── Scroll-Snap Page Container (Buttery-Smooth Native Snapping) ── */}
+      <main className="relative z-10 h-screen overflow-y-auto snap-y snap-mandatory scroll-smooth">
         {SECTIONS.map((section) => (
           <section
             key={section.id}
@@ -408,7 +440,7 @@ function PageInner() {
             ref={(el) => {
               sectionRefs.current[section.index] = el;
             }}
-            className="relative h-screen w-full lg:snap-start lg:snap-always flex items-center overflow-hidden"
+            className="relative h-screen w-full snap-start snap-always flex items-center overflow-hidden"
           >
             {section.index === 0 ? (
               <HeroContent />
